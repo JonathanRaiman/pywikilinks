@@ -1,9 +1,14 @@
+"""
+Utilities for using bash wget and gunzip
+to download and collect files along with
+the file-list and url-list of wiki-links.
+"""
 import subprocess
 
 from os.path import join, exists
 from os import makedirs, stat
 
-def execute_bash(command):
+def execute_bash(command, verbose=True):
     """
     Executes bash command, prints output and throws an exception on failure.
     (Warning: this runs shell commands)
@@ -14,7 +19,8 @@ def execute_bash(command):
                                stderr=subprocess.STDOUT,
                                universal_newlines=True)
     for line in process.stdout:
-        print(line, end='', flush=True)
+        if verbose:
+            print(line, end='', flush=True)
     process.wait()
     assert process.returncode == 0
 
@@ -28,7 +34,7 @@ def get_urls():
     http://www.iesl.cs.umass.edu/data/wiki-links
 
     Returns:
-        list<str> : urls
+        list<tuple<str,str>> : urls and filenames
     """
     base_url = (
         "http://iesl.cs.umass.edu/downloads/wiki-link/context-only/"
@@ -41,7 +47,7 @@ def get_urls():
     return urls
 
 
-def download_and_extract(urls, path):
+def download_and_extract(urls, path, verbose=True):
     """
     Download the files specified under `urls` into a folder `path` and run
     `gunzip` on the files. Checks if the files exists before downloading
@@ -50,6 +56,9 @@ def download_and_extract(urls, path):
     Arguments:
         urls : list<str>, location of the files to download
         path : str, path to directory where files should be kept
+        verbose : bool, defaults to True. print message when a file
+                  was already downloaded and isn't re-downloaded.
+                  also shows wget and gunzip output.
 
     Returns:
         list<str> : absolute filenames of downloaded files.
@@ -65,12 +74,13 @@ def download_and_extract(urls, path):
         extracted_files.append(unzipped)
 
         if exists(unzipped) and stat(unzipped).st_size > 1000:
-            print("Already downloaded and extracted %r." % (unzipped,))
+            if verbose:
+                print("Already downloaded and extracted %r." % (unzipped,))
             continue
 
         if not (exists(dest) and stat(dest).st_size > 1000):
-            execute_bash("wget -O %s %s" % (dest, url))
+            execute_bash("wget -O %s %s" % (dest, url), verbose=verbose)
 
-        execute_bash("gunzip %s" % (dest,))
+        execute_bash("gunzip %s" % (dest,), verbose=verbose)
 
     return extracted_files

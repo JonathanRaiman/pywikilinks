@@ -8,7 +8,7 @@ setup(
     name='pywikilinks',
     version='0.0.1',
     description='Python package for downloading wiki-links corpus',
-    long_description=readfile('README.md'),
+    long_description=readfile('README'),
     ext_modules=[],
     packages=find_packages(),
     author='Jonathan Raiman',
