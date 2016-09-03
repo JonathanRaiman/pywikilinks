@@ -1,5 +1,5 @@
 import argparse
-from thrift_decoder import read_thrift_files, get_urls, download_and_extract
+from pywikilinks import read_thrift_files, get_urls, download_and_extract
 
 
 def parse_args():

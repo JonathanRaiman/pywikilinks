@@ -25,7 +25,6 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Topic :: Text Processing :: Linguistic',
     ],
-    # test_suite="something.test",
     setup_requires = [],
     install_requires=[
         'thrift'
