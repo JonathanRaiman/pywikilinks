@@ -6,7 +6,7 @@ def readfile(fname):
 
 setup(
     name='pywikilinks',
-    version='0.0.1',
+    version='0.0.2',
     description='Python package for downloading wiki-links corpus',
     long_description=readfile('README'),
     ext_modules=[],
